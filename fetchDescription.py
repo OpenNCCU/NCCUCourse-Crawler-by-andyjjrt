@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import re, requests, logging
 
-def fetch_description(courseId: str):
+def fetchDescription(courseId: str):
   if len(courseId) != 13:
     raise Exception("Wrong courseId format")
   result = {
@@ -39,8 +39,8 @@ def fetch_description(courseId: str):
           result["objectives"].append(line)  
     else:
       # get syllabus description
-      description_title = soap.find("div", {"class": "col-sm-7 sylview--mtop col-p-6"}).find("h2", {"class": "text-primary"})
-      descriptions = description_title.find_next_siblings(True)
+      descriptionTitle = soap.find("div", {"class": "col-sm-7 sylview--mtop col-p-6"}).find("h2", {"class": "text-primary"})
+      descriptions = descriptionTitle.find_next_siblings(True)
       for description in descriptions:
         if description.attrs and description.attrs.get("class") and ["row", "sylview-mtop", "fa-border"] == description.attrs["class"]:
           break
@@ -60,4 +60,4 @@ def fetch_description(courseId: str):
   return result
 
 if __name__ == "__main__":
-  print(fetch_description("1131000219521"))
+  print(fetchDescription("1131000219521"))

@@ -2,7 +2,7 @@ import logging
 from google.cloud import translate_v2 as translate
 from dotenv import load_dotenv
 
-def translate_rate(text: str) -> str:
+def translateRate(text: str) -> str:
   load_dotenv()
   translate_client = translate.Client()
 
@@ -13,5 +13,5 @@ def translate_rate(text: str) -> str:
   return result["translatedText"]
 
 if __name__ == "__main__":
-  res = translate_rate("這是一份測試評價")
+  res = translateRate("這是一份測試評價")
   print(res)

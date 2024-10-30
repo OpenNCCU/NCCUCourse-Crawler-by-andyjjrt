@@ -64,22 +64,22 @@ class DB:
     cur.execute("CREATE TABLE IF NOT EXISTS RATE ( courseId TEXT NOT NULL, rowId TEXT NOT NULL, teacherId TEXT, content TEXT, contentEn TEXT, PRIMARY KEY (courseId, rowId) )")
     cur.execute("CREATE TABLE IF NOT EXISTS RESULT ( courseId TEXT, yearsem TEXT, name TEXT, teacher TEXT, time TEXT, studentLimit INTEGER, studentCount INTEGER, lastEnroll INTEGER, PRIMARY KEY (courseId))")
     
-  def add_rate(self, rowId: str, courseId: str, teacherId: str, content: str, contentEn: str):
+  def addRate(self, rowId: str, courseId: str, teacherId: str, content: str, contentEn: str):
     cur = self.con.cursor()
     cur.execute("INSERT OR REPLACE INTO RATE (rowId, courseId, teacherId, content, contentEn) VALUES (?, ?, ?, ?, ?)", (rowId, courseId, teacherId, content, contentEn))
     self.con.commit()
   
-  def add_teacher(self, id: str, name: str):
+  def addTeacher(self, id: str, name: str):
     cur = self.con.cursor()
     cur.execute("INSERT OR REPLACE INTO TEACHER (id, name) VALUES (?, ?)", (id, name))
     self.con.commit()
   
-  def add_result(self, yearsem: str, courseId: str, name: str, teacher: str, time: str, studentLimit: int, studentCount: int, lastEnroll: int):
+  def addResult(self, yearsem: str, courseId: str, name: str, teacher: str, time: str, studentLimit: int, studentCount: int, lastEnroll: int):
     cur = self.con.cursor()
     cur.execute("INSERT OR REPLACE INTO RESULT (courseId, yearsem, name, teacher, time, studentLimit, studentCount, lastEnroll) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (yearsem + courseId, yearsem, name, teacher, time, studentLimit, studentCount, lastEnroll))
     self.con.commit()
     
-  def get_teachers(self):
+  def getTeachers(self):
     cur = self.con.cursor()
     request = cur.execute("SELECT * FROM TEACHER")
     response = request.fetchall()
@@ -90,7 +90,7 @@ class DB:
     
     return res
   
-  def add_course(self, courseData: dict, courseDataEn: dict, dp1: str, dp2: str, dp3: str, syllabus: str, description: str):
+  def addCourse(self, courseData: dict, courseDataEn: dict, dp1: str, dp2: str, dp3: str, syllabus: str, description: str):
     if courseData["subKind"] == "必修":
       kind = 1
     elif courseData["subKind"] == "選修":
@@ -148,27 +148,27 @@ class DB:
     )
     self.con.commit()
   
-  def get_course(self, y: str, s: str):
+  def getCourse(self, y: str, s: str):
     cur = self.con.cursor()
     request = cur.execute('SELECT teaNam FROM COURSE WHERE y = 111 AND s = 2')
     response = request.fetchall()
     
     return [str(x[0]) for x in response]
   
-  def get_this_semester_course(self, y: str, s: str):
+  def getThisSemesterCourse(self, y: str, s: str):
     cur = self.con.cursor()
     request = cur.execute('SELECT DISTINCT subNum FROM COURSE WHERE y = ? AND s = ?', [y, s])
     response = request.fetchall()
     
     return [str(x[0]) for x in response]
 
-  def is_course_exist(self, courseId: str, dp: dict):
+  def isCourseExist(self, courseId: str, dp: dict):
     cur = self.con.cursor()
     request = cur.execute('SELECT COUNT(*) FROM COURSE WHERE id = ? AND dp1 = ? AND dp2 = ? AND dp3 = ?', [courseId, dp["dp1"], dp["dp2"], dp["dp3"]])
     response = request.fetchone()
     return response[0] > 0
   
-  def is_rate_exist(self, courseId: str):
+  def isRateExist(self, courseId: str):
     cur = self.con.cursor()
     request = cur.execute('SELECT COUNT( DISTINCT courseId) FROM RATE WHERE courseId = ?', [courseId])
     response = request.fetchone()
@@ -176,4 +176,4 @@ class DB:
 
 if __name__ == "__main__":
   db = DB("test.db")
-  print(db.get_this_semester_course("111", "2"))
+  print(db.getThisSemesterCourse("111", "2"))
